@@ -17,15 +17,10 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 
-import es.upm.eacs.pruebas.TicTacToeGame.Cell;
-
 @RunWith(Parameterized.class)
 public class BoardParametrizedTest {
 
 	private Board board;
-	private final int numberOfCells = 9;
-	private final int combinationLength = 3;
-
 	enum Type {
 		WIN, LOOSE
 	};
