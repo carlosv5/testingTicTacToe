@@ -23,11 +23,11 @@ public class BoardTest {
 	}
 
 	@Test
-	public void GivenABoardWithCellsFilledWithaDraw_WhenCheckDraw_ThenTheResultIsYes() {
+	public void GivenBoardWithCellsFilledWithaDraw_WhenCheckDraw_ThenTheResultIsYes() {
 
 		// When
 		board.enableAll();
-		for (int i = 0; i < 9; i++) {
+		for (int i = 0; i < numberOfCells; i++) {
 			Cell cell = board.getCell(i);
 			cell.value = "X";
 		}
@@ -37,21 +37,17 @@ public class BoardTest {
 	}
 
 	@Test
-	public void GivenABoardWithCellsFilledWitouthaDraw_WhenCheckDraw_ThenTheResultIsNo() {
+	public void GivenBoardWithoutCellsFilled_WhenCheckDraw_ThenTheResultIsNo() {
 
 		// When
 		board.enableAll();
-		for (int i = 0; i < 3; i++) {
-			Cell cell = board.getCell(i);
-			cell.value = "O";
-		}
 
 		// Then
 		assertFalse(board.checkDraw());
 	}
 
 	@Test
-	public void GivenWinningPositions_WhenFillingThisPositionsInTheBoard_ThenGetCellsIfWinnerItReturnsTheWinningPositions() {
+	public void GivenBoardAndWinningPositions_WhenFillingThisPositionsInTheBoard_ThenGetCellsIfWinnerItReturnsTheWinningPositions() {
 
 		// Given
 		int[] winPositions = { 0, 1, 2 };
@@ -71,7 +67,7 @@ public class BoardTest {
 	}
 
 	@Test
-	public void GivenNotWinningPositions_WhenFillingThisPositionsInTheBoard_ThenGetCellsIfWinnerItReturnsNull() {
+	public void GivenBoardAndNotWinningPositions_WhenFillingThisPositionsInTheBoard_ThenGetCellsIfWinnerItReturnsNull() {
 
 		// Given
 		int[] winPositions = { 0, 1, 5 };
@@ -90,7 +86,7 @@ public class BoardTest {
 	}
 
 	@Test
-	public void GivenWinningPositions_WhenFillingThisPositionsInTheBoardWithX_ThenGetCellsIfWinnerOfOReturnsNull() {
+	public void GivenBoardAndWinningPositions_WhenFillingThisPositionsInTheBoardWithX_ThenGetCellsIfWinnerOfOReturnsNull() {
 
 		// Given
 		int[] winPositions = { 0, 1, 2 };
@@ -107,6 +103,30 @@ public class BoardTest {
 		// Then
 		assertNull(result);
 
+	}
+	
+	@Test
+	public void GivenBoard_whenEnableAllCells_thenAllCellsEnabled() {
+		
+		//When
+		board.enableAll();
+		
+		//Then
+		for (int i = 0; i < numberOfCells; i++) {
+			assertTrue(board.getCell(i).active);
+		}
+	}
+	
+	@Test
+	public void GivenBoard_whenDisableAllCells_thenAllCellsDisabled() {
+	
+		//When
+		board.disableAll();
+		
+		//Then
+		for (int i = 0; i < numberOfCells; i++) {
+			assertFalse(board.getCell(i).active);
+		}
 	}
 
 }
