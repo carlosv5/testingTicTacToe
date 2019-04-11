@@ -1,54 +1,112 @@
 package es.codeurjc.ais.tictactoe;
+
 import static org.junit.Assert.*;
 
+import java.util.Arrays;
 
+import org.hamcrest.Matchers;
 import org.junit.Test;
+import static org.hamcrest.CoreMatchers.is;
 
 import es.codeurjc.ais.tictactoe.Board;
 import es.codeurjc.ais.tictactoe.TicTacToeGame.Cell;
 
 public class BoardTest {
 
-	  @Test
-	  public void GivenABoardWhenCellsFilledWithaDrawWhenCheckDrawTheResultIsYes() {
-		  
-	  //Given
-	  Board board = new Board();
-	  
-		//When
-	  board.enableAll();
+	@Test
+	public void GivenABoardWithCellsFilledWithaDraw_WhenCheckDraw_ThenTheResultIsYes() {
 
-	   for(int i = 0;  i<9; i++) {
-		   if(i %2 == 0) {
-				Cell cell = board.getCell(i);
-				   cell.value = "X";     
-		   } else {
-				Cell cell = board.getCell(i);
-				   cell.value = "O";    
-		   }
-	   }
-		  
-	  //Then
-	  assertTrue(board.checkDraw());
-	  }	
-	  
-	  
-	  @Test
-	  public void GivenABoardWhenCellsFilledWitouthaDrawWhenCheckDrawTheResultIsNo() {
-		  
-	  //Given
-	  Board board = new Board();
-	  
-		//When
-	  board.enableAll();
+		// Given
+		Board board = new Board();
 
-	   for(int i = 0;  i<3; i++) {
+		// When
+		board.enableAll();
+		for (int i = 0; i < 9; i++) {
 			Cell cell = board.getCell(i);
-			   cell.value = "O"; 
-	   }
-	 
-	  //Then
-	  assertFalse(board.checkDraw());
-	  }
-	
+			cell.value = "X";
+		}
+
+		// Then
+		assertTrue(board.checkDraw());
+	}
+
+	@Test
+	public void GivenABoardWithCellsFilledWitouthaDraw_WhenCheckDraw_ThenTheResultIsNo() {
+
+		// Given
+		Board board = new Board();
+
+		// When
+		board.enableAll();
+		for (int i = 0; i < 3; i++) {
+			Cell cell = board.getCell(i);
+			cell.value = "O";
+		}
+
+		// Then
+		assertFalse(board.checkDraw());
+	}
+
+	@Test
+	public void GivenWinningPositions_WhenFillingThisPositionsInTheBoard_ThenGetCellsIfWinnerItReturnsTheWinningPositions() {
+
+		// Given
+		Board board = new Board();
+		int[] winPositions = { 0, 1, 2 };
+
+		// When
+		board.enableAll();
+		for (int i = 0; i < winPositions.length; i++) {
+			Cell cell = board.getCell(winPositions[i]);
+			cell.value = "X";
+		}
+		int[] result = board.getCellsIfWinner("X");
+
+		// Then
+		for (int i = 0; i < 3; i++) {
+			assertThat(result[i], is(winPositions[i]));
+		}
+	}
+
+	@Test
+	public void GivenNotWinningPositions_WhenFillingThisPositionsInTheBoard_ThenGetCellsIfWinnerItReturnsNull() {
+
+		// Given
+		Board board = new Board();
+		int[] winPositions = { 0, 1, 5 };
+
+		// When
+		board.enableAll();
+		for (int i = 0; i < winPositions.length; i++) {
+			Cell cell = board.getCell(winPositions[i]);
+			cell.value = "X";
+		}
+		int[] result = board.getCellsIfWinner("X");
+
+		// Then
+		assertNull(result);
+
+	}
+
+	@Test
+	public void GivenWinningPositions_WhenFillingThisPositionsInTheBoardWithX_ThenGetCellsIfWinnerOfOReturnsNull() {
+
+		// Given
+		Board board = new Board();
+		int[] winPositions = { 0, 1, 2 };
+
+		// When
+		board.enableAll();
+
+		for (int i = 0; i < winPositions.length; i++) {
+			Cell cell = board.getCell(winPositions[i]);
+			cell.value = "X";
+		}
+		int[] result = board.getCellsIfWinner("O");
+
+		// Then
+		assertNull(result);
+
+	}
+
 }
