@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.util.Arrays;
 
 import org.hamcrest.Matchers;
+import org.junit.Before;
 import org.junit.Test;
 import static org.hamcrest.CoreMatchers.is;
 
@@ -12,12 +13,17 @@ import es.codeurjc.ais.tictactoe.Board;
 import es.codeurjc.ais.tictactoe.TicTacToeGame.Cell;
 
 public class BoardTest {
+	
+	private Board board;
+	private final int numberOfCells = 9;
+	
+	@Before
+	public void setup() {
+		board = new Board();
+	}
 
 	@Test
 	public void GivenABoardWithCellsFilledWithaDraw_WhenCheckDraw_ThenTheResultIsYes() {
-
-		// Given
-		Board board = new Board();
 
 		// When
 		board.enableAll();
@@ -32,9 +38,6 @@ public class BoardTest {
 
 	@Test
 	public void GivenABoardWithCellsFilledWitouthaDraw_WhenCheckDraw_ThenTheResultIsNo() {
-
-		// Given
-		Board board = new Board();
 
 		// When
 		board.enableAll();
@@ -51,7 +54,6 @@ public class BoardTest {
 	public void GivenWinningPositions_WhenFillingThisPositionsInTheBoard_ThenGetCellsIfWinnerItReturnsTheWinningPositions() {
 
 		// Given
-		Board board = new Board();
 		int[] winPositions = { 0, 1, 2 };
 
 		// When
@@ -72,7 +74,6 @@ public class BoardTest {
 	public void GivenNotWinningPositions_WhenFillingThisPositionsInTheBoard_ThenGetCellsIfWinnerItReturnsNull() {
 
 		// Given
-		Board board = new Board();
 		int[] winPositions = { 0, 1, 5 };
 
 		// When
@@ -92,7 +93,6 @@ public class BoardTest {
 	public void GivenWinningPositions_WhenFillingThisPositionsInTheBoardWithX_ThenGetCellsIfWinnerOfOReturnsNull() {
 
 		// Given
-		Board board = new Board();
 		int[] winPositions = { 0, 1, 2 };
 
 		// When
