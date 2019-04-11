@@ -1,4 +1,4 @@
-package es.codeurjc.ais.tictactoe;
+package es.upm.eacs.pruebas;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

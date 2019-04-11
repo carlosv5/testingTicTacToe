@@ -1,13 +1,13 @@
-package es.codeurjc.ais.tictactoe;
+package es.upm.eacs.pruebas;
 
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import es.codeurjc.ais.tictactoe.TicTacToeGame.Event;
-import es.codeurjc.ais.tictactoe.TicTacToeGame.EventType;
-import es.codeurjc.ais.tictactoe.TicTacToeHandler.ServerToClientMsg;
+import es.upm.eacs.pruebas.TicTacToeGame.Event;
+import es.upm.eacs.pruebas.TicTacToeGame.EventType;
+import es.upm.eacs.pruebas.TicTacToeHandler.ServerToClientMsg;
 
 public class Connection {
 

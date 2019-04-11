@@ -1,4 +1,4 @@
-package es.codeurjc.ais.tictactoe;
+package es.upm.eacs.pruebas;
 
 import static org.junit.Assert.*;
 
@@ -7,10 +7,11 @@ import java.util.Arrays;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
-import static org.hamcrest.CoreMatchers.is;
 
-import es.codeurjc.ais.tictactoe.Board;
-import es.codeurjc.ais.tictactoe.TicTacToeGame.Cell;
+import es.upm.eacs.pruebas.Board;
+import es.upm.eacs.pruebas.TicTacToeGame.Cell;
+
+import static org.hamcrest.CoreMatchers.is;
 
 public class BoardTest {
 	

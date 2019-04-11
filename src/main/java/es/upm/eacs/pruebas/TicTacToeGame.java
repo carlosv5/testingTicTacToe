@@ -1,4 +1,4 @@
-package es.codeurjc.ais.tictactoe;
+package es.upm.eacs.pruebas;
 
 import java.io.Serializable;
 import java.util.List;

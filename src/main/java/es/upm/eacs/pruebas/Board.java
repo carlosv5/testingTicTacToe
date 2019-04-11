@@ -1,9 +1,9 @@
-package es.codeurjc.ais.tictactoe;
+package es.upm.eacs.pruebas;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import es.codeurjc.ais.tictactoe.TicTacToeGame.Cell;
+import es.upm.eacs.pruebas.TicTacToeGame.Cell;
 
 public class Board {
 	

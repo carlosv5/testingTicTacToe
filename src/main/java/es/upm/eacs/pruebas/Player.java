@@ -1,4 +1,4 @@
-package es.codeurjc.ais.tictactoe;
+package es.upm.eacs.pruebas;
 
 public class Player {
 
