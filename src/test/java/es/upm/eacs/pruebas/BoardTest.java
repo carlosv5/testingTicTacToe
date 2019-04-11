@@ -14,10 +14,10 @@ import es.upm.eacs.pruebas.TicTacToeGame.Cell;
 import static org.hamcrest.CoreMatchers.is;
 
 public class BoardTest {
-	
+
 	private Board board;
 	private final int numberOfCells = 9;
-	
+
 	@Before
 	public void setup() {
 		board = new Board();
@@ -105,26 +105,26 @@ public class BoardTest {
 		assertNull(result);
 
 	}
-	
+
 	@Test
 	public void GivenBoard_whenEnableAllCells_thenAllCellsEnabled() {
-		
-		//When
+
+		// When
 		board.enableAll();
-		
-		//Then
+
+		// Then
 		for (int i = 0; i < numberOfCells; i++) {
 			assertTrue(board.getCell(i).active);
 		}
 	}
-	
+
 	@Test
 	public void GivenBoard_whenDisableAllCells_thenAllCellsDisabled() {
-	
-		//When
+
+		// When
 		board.disableAll();
-		
-		//Then
+
+		// Then
 		for (int i = 0; i < numberOfCells; i++) {
 			assertFalse(board.getCell(i).active);
 		}
