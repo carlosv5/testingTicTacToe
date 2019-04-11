@@ -13,7 +13,7 @@ import es.upm.eacs.pruebas.TicTacToeGame.Cell;
 
 import static org.hamcrest.CoreMatchers.is;
 
-public class BoardTest {
+public class BoardSingleTest {
 
 	private Board board;
 	private final int numberOfCells = 9;
@@ -34,7 +34,7 @@ public class BoardTest {
 		}
 
 		// Then
-		assertTrue(board.checkDraw());
+		assertTrue("Debería haber empate", board.checkDraw());
 	}
 
 	@Test
@@ -44,7 +44,7 @@ public class BoardTest {
 		board.enableAll();
 
 		// Then
-		assertFalse(board.checkDraw());
+		assertFalse("No debería haber empate", board.checkDraw());
 	}
 
 	@Test
@@ -63,7 +63,7 @@ public class BoardTest {
 
 		// Then
 		for (int i = 0; i < 3; i++) {
-			assertThat(result[i], is(winPositions[i]));
+			assertThat("Las celdas ganadoras deberían ser las mismas", result[i], is(winPositions[i]));
 		}
 	}
 
@@ -82,7 +82,7 @@ public class BoardTest {
 		int[] result = board.getCellsIfWinner("X");
 
 		// Then
-		assertNull(result);
+		assertNull("El jugador X no debería de haber ganado!", result);
 
 	}
 
@@ -102,7 +102,7 @@ public class BoardTest {
 		int[] result = board.getCellsIfWinner("O");
 
 		// Then
-		assertNull(result);
+		assertNull("El jugador O no debería de haber ganado!", result);
 
 	}
 
@@ -114,7 +114,7 @@ public class BoardTest {
 
 		// Then
 		for (int i = 0; i < numberOfCells; i++) {
-			assertTrue(board.getCell(i).active);
+			assertTrue("Las celdas deberían estar habilitadas", board.getCell(i).active);
 		}
 	}
 
@@ -126,7 +126,7 @@ public class BoardTest {
 
 		// Then
 		for (int i = 0; i < numberOfCells; i++) {
-			assertFalse(board.getCell(i).active);
+			assertFalse("Las celdas no deberían estar habilitadas",board.getCell(i).active);
 		}
 	}
 
