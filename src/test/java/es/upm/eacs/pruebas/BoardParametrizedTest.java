@@ -1,10 +1,7 @@
 package es.upm.eacs.pruebas;
 
-import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
@@ -18,35 +15,32 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 
-import es.upm.eacs.pruebas.TicTacToeGame.Cell;
-
 @RunWith(Parameterized.class)
 public class BoardParametrizedTest {
 
 	private Board board;
-	private String px = "X";
-	private String po = "O";
+
 	enum Type {
 		WINX, WINO, DRAW
 	};
 
 	@Parameters(name = "{index}: TypeTest: {9} - CellsX[{0},{1},{2},{6},{8}] - CellsO[{3},{4},{5},{7}] - Player {3} - Result:{4}")
 	public static Collection<Object[]> data() {
-	Object[][] values = { { 0, 3, 1, 4, 2, 6, 9, 9, 9, Type.WINX },
-						  { 0, 1, 4, 2, 8, 5, 9, 9, 9, Type.WINX },
-						  { 2, 3, 5, 4, 8, 7, 9, 9, 9, Type.WINX }, 
-						  { 1, 0, 4, 3, 5, 6, 9, 9, 9, Type.WINO },
-						  { 0, 3, 1, 4, 8, 5, 9, 9, 9, Type.WINO },
-						  { 4, 0, 6, 1, 5, 2, 9, 9, 9, Type.WINO },
-						  { 0, 1, 4, 2, 5, 3, 6, 8, 7, Type.DRAW },
-						  { 0, 2, 1, 3, 5, 4, 6, 7, 8, Type.DRAW },
-						  { 0, 1, 3, 8, 4, 5, 7, 6, 2, Type.DRAW }
-		};
-	
-	// 0  1  2
-	// 3  4  5
-	// 6  7  8	
-	
+		Object[][] values = {   { 0, 3, 1, 4, 2, 6, 9, 9, 9, Type.WINX, "X", "O" }, 
+								{ 0, 1, 4, 2, 8, 5, 9, 9, 9, Type.WINX, "X", "O" },
+								{ 2, 3, 5, 4, 8, 7, 9, 9, 9, Type.WINX, "X", "O" }, 
+								{ 1, 0, 4, 3, 5, 6, 9, 9, 9, Type.WINO, "X", "O" },
+								{ 0, 3, 1, 4, 8, 5, 9, 9, 9, Type.WINO, "X", "O" }, 
+								{ 4, 0, 6, 1, 5, 2, 9, 9, 9, Type.WINO, "X", "O" },
+								{ 0, 1, 4, 2, 5, 3, 6, 8, 7, Type.DRAW, "X", "O" }, 
+								{ 0, 2, 1, 3, 5, 4, 6, 7, 8, Type.DRAW, "X", "O" },
+								{ 0, 1, 3, 8, 4, 5, 7, 6, 2, Type.DRAW, "X", "O" } 
+								};
+
+		// 0 1 2
+		// 3 4 5
+		// 6 7 8
+
 		return Arrays.asList(values);
 	}
 
@@ -70,80 +64,62 @@ public class BoardParametrizedTest {
 	public int cellId8;
 	@Parameter(9)
 	public Type type;
+	@Parameter(10)
+	public String p0;
+	@Parameter(11)
+	public String p1;
 
 	@Before
 	public void setup() {
 		board = new Board();
+		board.enableAll();
+	}
+
+	private void fillBoard() {
+		int[] cells = { cellId0, cellId1, cellId2, cellId3, cellId4, cellId5, cellId6, cellId7, cellId8 };
+		for (int i = 0; i < cells.length; i++) {
+			if (cells[i] != 9) {
+				if (i % 2 == 0) {
+					board.getCell(cells[i]).value = p0;
+				} else {
+					board.getCell(cells[i]).value = p1;
+				}
+			}
+		}
 	}
 
 	@Test
-	public void GivenBoardAndPositions_WhenAsummingWINXTypeAndFillingThisPositionsInTheBoard_ThenCheckBoardMethods() {
+	public void GivenBoardAndPositions_WhenAsummingWINXTypeAndFillingThisPositionsInTheBoard_ThenFirstOneWins() {
 		// When
 		Assume.assumeTrue(type == Type.WINX);
-		board.enableAll();
-			
-		board.getCell(cellId0).value = px;
-		board.getCell(cellId1).value = po;
-		board.getCell(cellId2).value = px;
-		board.getCell(cellId3).value = po;
-		board.getCell(cellId4).value = px;
-		board.getCell(cellId5).value = po;
-		int[] resultX = board.getCellsIfWinner(px);
-		int[] resultO = board.getCellsIfWinner(po);
-		
+		fillBoard();
+		int[] result = board.getCellsIfWinner(p0);
+
 		// Then
-		assertNull(resultO);
+		assertNotNull(result);
 		assertFalse(board.checkDraw());
-		assertThat(resultX[0], is(cellId0));
-		assertThat(resultX[1], is(cellId2));
-		assertThat(resultX[2], is(cellId4));
 	}
-	
+
 	@Test
-	public void GivenBoardAndPositions_WhenAsummingWINOTypeAndFillingThisPositionsInTheBoard_ThenCheckBoardMethods() {
+	public void GivenBoardAndPositions_WhenAsummingWINOTypeAndFillingThisPositionsInTheBoard_ThenSecondOneWins() {
 		// When
 		Assume.assumeTrue(type == Type.WINO);
-		board.enableAll();
-			
-		board.getCell(cellId0).value = px;
-		board.getCell(cellId1).value = po;
-		board.getCell(cellId2).value = px;
-		board.getCell(cellId3).value = po;
-		board.getCell(cellId4).value = px;
-		board.getCell(cellId5).value = po;
-		int[] resultX = board.getCellsIfWinner(px);
-		int[] resultO = board.getCellsIfWinner(po);
-		
+		fillBoard();
+		int[] result = board.getCellsIfWinner(p1);
+
 		// Then
-		assertNull(resultX);
+		assertNotNull(result);
 		assertFalse(board.checkDraw());
-		assertThat(resultO[0], is(cellId1));
-		assertThat(resultO[1], is(cellId3));
-		assertThat(resultO[2], is(cellId5));
 	}
-	
+
 	@Test
-	public void GivenBoardAndPositions_WhenAsummingDRAWypeAndFillingThisPositionsInTheBoard_ThenCheckBoardMethods() {
-		// When
+	public void GivenBoardAndPositions_WhenAsummingDRAWypeAndFillingThisPositionsInTheBoard_ThenTheyDraw() {
+        // When 
 		Assume.assumeTrue(type == Type.DRAW);
-		board.enableAll();
-			
-		board.getCell(cellId0).value = px;
-		board.getCell(cellId1).value = po;
-		board.getCell(cellId2).value = px;
-		board.getCell(cellId3).value = po;
-		board.getCell(cellId4).value = px;
-		board.getCell(cellId5).value = po;
-		board.getCell(cellId6).value = px;
-		board.getCell(cellId7).value = po;
-		board.getCell(cellId8).value = px;
-		int[] resultX = board.getCellsIfWinner(px);
-		int[] resultO = board.getCellsIfWinner(po);
-		
+		fillBoard();
+
 		// Then
-		assertNull(resultX);
-		assertNull(resultO);
 		assertTrue(board.checkDraw());
 	}
-}
 
+}
