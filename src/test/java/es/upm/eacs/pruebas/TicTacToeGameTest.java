@@ -53,55 +53,52 @@ public class TicTacToeGameTest {
 			game.mark(cells[i]);
 		}
 	}
+	
+	private void checkWinner(Player player, int[] winnerCells) {
+		ArgumentCaptor<WinnerValue> argument = ArgumentCaptor.forClass(WinnerValue.class);
+		verify(conn1).sendEvent(eq(EventType.GAME_OVER), argument.capture());
+		verify(conn1).sendEvent(eq(EventType.GAME_OVER), argument.capture());
+		WinnerValue winnerValueResult = argument.getValue();
+
+		WinnerValue winnerValue = new WinnerValue();
+		winnerValue.pos = winnerCells;
+		winnerValue.player = player;
+
+		assertThat(player.getLabel(), is(winnerValueResult.player.getLabel()));
+		assertEquals(winnerCells[0], winnerValue.pos[0]);
+		assertEquals(winnerCells[1], winnerValue.pos[1]);
+		assertEquals(winnerCells[2], winnerValue.pos[2]);
+	}
 
 	@Test
-	public void testWinX() {
+	public void GivenTwoPlayers_WhenFillingTheCells_ThenFirstOneWins() {
 		int[] cells = { 0, 1, 3, 4, 6 };
 		fillBoard(cells);
 		verify(conn1, times(3)).sendEvent(eq(EventType.SET_TURN), argThat(is(px)));
-		verify(conn1, times(2)).sendEvent(eq(EventType.SET_TURN), argThat(is(po)));
-
-		ArgumentCaptor<WinnerValue> argument = ArgumentCaptor.forClass(WinnerValue.class);
-		verify(conn1).sendEvent(eq(EventType.GAME_OVER), argument.capture());
-		verify(conn1).sendEvent(eq(EventType.GAME_OVER), argument.capture());
-		WinnerValue winnerValueResult = argument.getValue();
-
-		WinnerValue winnerValue = new WinnerValue();
-		int[] array = { 0, 3, 6 };
-		winnerValue.pos = array;
-		winnerValue.player = px;
-
-		assertThat(px.getLabel(), is(winnerValueResult.player.getLabel()));
-		// assertArrayEquals(array, winnerValueResult );
+		verify(conn2, times(2)).sendEvent(eq(EventType.SET_TURN), argThat(is(po)));
+		
+		int[] winnerCells = {cells[0], cells[2], cells[4]};
+		checkWinner(px, winnerCells);
 	}
 
 	@Test
-	public void testWinO() {
+	public void GivenTwoPlayers_WhenFillingTheCells_ThenFirstSecondWins() {
 		int[] cells = { 4, 0, 1, 3, 2, 6 };
 		fillBoard(cells);
 		verify(conn1, times(3)).sendEvent(eq(EventType.SET_TURN), argThat(is(px)));
-		verify(conn1, times(3)).sendEvent(eq(EventType.SET_TURN), argThat(is(po)));
-
-		ArgumentCaptor<WinnerValue> argument = ArgumentCaptor.forClass(WinnerValue.class);
-		verify(conn1).sendEvent(eq(EventType.GAME_OVER), argument.capture());
-		verify(conn1).sendEvent(eq(EventType.GAME_OVER), argument.capture());
-		WinnerValue winnerValueResult = argument.getValue();
-
-		WinnerValue winnerValue = new WinnerValue();
-		int[] array = { 0, 3, 6 };
-		winnerValue.pos = array;
-		winnerValue.player = px;
-
-		assertThat(po.getLabel(), is(winnerValueResult.player.getLabel()));
-		// assertArrayEquals(array, winnerValueResult );
+		verify(conn2, times(3)).sendEvent(eq(EventType.SET_TURN), argThat(is(po)));
+		
+		int[] winnerCells = {cells[1], cells[3], cells[5]};
+		checkWinner(po, winnerCells);
 	}
 
 	@Test
-	public void testDraw() {
+	public void GivenTwoPlayers_WhenFillingTheCells_ThenTheyDraw() {
 		int[] cells = { 0, 2, 1, 3, 4, 7, 5, 8, 6 };
 		fillBoard(cells);
 		verify(conn1, times(5)).sendEvent(eq(EventType.SET_TURN), argThat(is(px)));
 		verify(conn2, times(4)).sendEvent(eq(EventType.SET_TURN), argThat(is(po)));
+		verify(conn1, times(1)).sendEvent(eq(EventType.GAME_OVER), argThat(nullValue()));
 		verify(conn2, times(1)).sendEvent(eq(EventType.GAME_OVER), argThat(nullValue()));
 	}
 }

@@ -89,7 +89,7 @@ public class BoardParametrizedTest {
 	}
 
 	@Test
-	public void GivenBoardAndPositions_WhenAsummingWINXTypeAndFillingThisPositionsInTheBoard_ThenFirstOneWins() {
+	public void GivenBoardAndPositions_WhenAsummingWINXTypeAndFillingThisCells_ThenFirstOneWins() {
 		// When
 		Assume.assumeTrue(type == Type.WINX);
 		fillBoard();
@@ -101,7 +101,7 @@ public class BoardParametrizedTest {
 	}
 
 	@Test
-	public void GivenBoardAndPositions_WhenAsummingWINOTypeAndFillingThisPositionsInTheBoard_ThenSecondOneWins() {
+	public void GivenBoardAndPositions_WhenAsummingWINOTypeAndFillingThisCells_ThenSecondOneWins() {
 		// When
 		Assume.assumeTrue(type == Type.WINO);
 		fillBoard();
@@ -113,7 +113,7 @@ public class BoardParametrizedTest {
 	}
 
 	@Test
-	public void GivenBoardAndPositions_WhenAsummingDRAWypeAndFillingThisPositionsInTheBoard_ThenTheyDraw() {
+	public void GivenBoardAndPositions_WhenAsummingDRAWypeAndFillingThisCells_ThenTheyDraw() {
         // When 
 		Assume.assumeTrue(type == Type.DRAW);
 		fillBoard();
