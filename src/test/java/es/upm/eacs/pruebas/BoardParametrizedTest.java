@@ -2,6 +2,7 @@ package es.upm.eacs.pruebas;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
@@ -36,11 +37,6 @@ public class BoardParametrizedTest {
 								{ 0, 2, 1, 3, 5, 4, 6, 7, 8, Type.DRAW, "X", "O" },
 								{ 0, 1, 3, 8, 4, 5, 7, 6, 2, Type.DRAW, "X", "O" } 
 								};
-
-		// 0 1 2
-		// 3 4 5
-		// 6 7 8
-
 		return Arrays.asList(values);
 	}
 
@@ -65,35 +61,37 @@ public class BoardParametrizedTest {
 	@Parameter(9)
 	public Type type;
 	@Parameter(10)
-	public String p0;
+	public String playerX;
 	@Parameter(11)
-	public String p1;
+	public String playerO;
 
 	@Before
 	public void setup() {
 		board = new Board();
 		board.enableAll();
+		fillBoard();
 	}
 
 	private void fillBoard() {
 		int[] cells = { cellId0, cellId1, cellId2, cellId3, cellId4, cellId5, cellId6, cellId7, cellId8 };
 		for (int i = 0; i < cells.length; i++) {
-			if (cells[i] != 9) {
-				if (i % 2 == 0) {
-					board.getCell(cells[i]).value = p0;
-				} else {
-					board.getCell(cells[i]).value = p1;
-				}
+			if (cells[i] == 9) {
+				break;
+			}
+			if (i % 2 == 0) { 
+				board.getCell(cells[i]).value = playerX;
+			}
+			else { 
+				board.getCell(cells[i]).value = playerO;
 			}
 		}
 	}
 
 	@Test
-	public void GivenBoardAndPositions_WhenAsummingWINXTypeAndFillingThisCells_ThenFirstOneWins() {
+	public void GivenBoardAndPositions_WhenAsummingWINXTypeAndFillingThisCells_ThenplayerXWins() {
 		// When
 		Assume.assumeTrue(type == Type.WINX);
-		fillBoard();
-		int[] result = board.getCellsIfWinner(p0);
+		int[] result = board.getCellsIfWinner(playerX);
 
 		// Then
 		assertNotNull(result);
@@ -101,11 +99,10 @@ public class BoardParametrizedTest {
 	}
 
 	@Test
-	public void GivenBoardAndPositions_WhenAsummingWINOTypeAndFillingThisCells_ThenSecondOneWins() {
+	public void GivenBoardAndPositions_WhenAsummingWINOTypeAndFillingThisCells_ThenplayerOWins() {
 		// When
 		Assume.assumeTrue(type == Type.WINO);
-		fillBoard();
-		int[] result = board.getCellsIfWinner(p1);
+		int[] result = board.getCellsIfWinner(playerO);
 
 		// Then
 		assertNotNull(result);
@@ -113,11 +110,14 @@ public class BoardParametrizedTest {
 	}
 
 	@Test
-	public void GivenBoardAndPositions_WhenAsummingDRAWypeAndFillingThisCells_ThenTheyDraw() {
+	public void GivenBoardAndPositions_WhenAsummingDRAWypeAndFillingThisCells_ThenPlayersDraw() {
         // When 
 		Assume.assumeTrue(type == Type.DRAW);
-		fillBoard();
-
+		int[] result = board.getCellsIfWinner(playerX);
+		assertNull(result);
+		result = board.getCellsIfWinner(playerO);
+		assertNull(result);
+		
 		// Then
 		assertTrue(board.checkDraw());
 	}

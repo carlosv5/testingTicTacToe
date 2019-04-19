@@ -3,11 +3,9 @@ package es.upm.eacs.pruebas;
 import static org.mockito.Mockito.*;
 
 import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.hamcrest.MockitoHamcrest.argThat;
-import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -21,8 +19,8 @@ public class TicTacToeGameTest {
 	private TicTacToeGame game;
 	private Connection conn1;
 	private Connection conn2;
-	private Player px;
-	private Player po;
+	private Player playerX;
+	private Player playerO;
 
 	@Before
 	public void setup() {
@@ -33,19 +31,19 @@ public class TicTacToeGameTest {
 		game.addConnection(conn1);
 		game.addConnection(conn2);
 
-		px = new Player(0, "X", "PlayerX");
-		po = new Player(1, "O", "PlayerO");
+		playerX = new Player(0, "X", "PlayerX");
+		playerO = new Player(1, "O", "PlayerO");
 
-		game.addPlayer(px);
-		verify(conn1, times(1)).sendEvent(eq(EventType.JOIN_GAME), argThat(hasItem(px)));
-		verify(conn2, times(1)).sendEvent(eq(EventType.JOIN_GAME), argThat(hasItem(px)));
+		game.addPlayer(playerX);
+		verify(conn1, times(1)).sendEvent(eq(EventType.JOIN_GAME), argThat(hasItem(playerX)));
+		verify(conn2, times(1)).sendEvent(eq(EventType.JOIN_GAME), argThat(hasItem(playerX)));
 
 		reset(conn1);
 		reset(conn2);
 
-		game.addPlayer(po);
-		verify(conn1, times(1)).sendEvent(eq(EventType.JOIN_GAME), argThat(hasItems(px, po)));
-		verify(conn2, times(1)).sendEvent(eq(EventType.JOIN_GAME), argThat(hasItems(px, po)));
+		game.addPlayer(playerO);
+		verify(conn1, times(1)).sendEvent(eq(EventType.JOIN_GAME), argThat(hasItems(playerX, playerO)));
+		verify(conn2, times(1)).sendEvent(eq(EventType.JOIN_GAME), argThat(hasItems(playerX, playerO)));
 	}
 
 	private void fillBoard(int[] cells) {
@@ -74,30 +72,30 @@ public class TicTacToeGameTest {
 	public void GivenTwoPlayers_WhenFillingTheCells_ThenFirstOneWins() {
 		int[] cells = { 0, 1, 3, 4, 6 };
 		fillBoard(cells);
-		verify(conn1, times(3)).sendEvent(eq(EventType.SET_TURN), argThat(is(px)));
-		verify(conn2, times(2)).sendEvent(eq(EventType.SET_TURN), argThat(is(po)));
+		verify(conn1, times(3)).sendEvent(eq(EventType.SET_TURN), argThat(is(playerX)));
+		verify(conn2, times(2)).sendEvent(eq(EventType.SET_TURN), argThat(is(playerO)));
 		
 		int[] winnerCells = {cells[0], cells[2], cells[4]};
-		checkWinner(px, winnerCells);
+		checkWinner(playerX, winnerCells);
 	}
 
 	@Test
-	public void GivenTwoPlayers_WhenFillingTheCells_ThenFirstSecondWins() {
+	public void GivenTwoPlayers_WhenFillingTheCells_ThenSecondOneWins() {
 		int[] cells = { 4, 0, 1, 3, 2, 6 };
 		fillBoard(cells);
-		verify(conn1, times(3)).sendEvent(eq(EventType.SET_TURN), argThat(is(px)));
-		verify(conn2, times(3)).sendEvent(eq(EventType.SET_TURN), argThat(is(po)));
+		verify(conn1, times(3)).sendEvent(eq(EventType.SET_TURN), argThat(is(playerX)));
+		verify(conn2, times(3)).sendEvent(eq(EventType.SET_TURN), argThat(is(playerO)));
 		
 		int[] winnerCells = {cells[1], cells[3], cells[5]};
-		checkWinner(po, winnerCells);
+		checkWinner(playerO, winnerCells);
 	}
 
 	@Test
-	public void GivenTwoPlayers_WhenFillingTheCells_ThenTheyDraw() {
+	public void GivenTwoPlayers_WhenFillingTheCells_ThenPlayersDraw() {
 		int[] cells = { 0, 2, 1, 3, 4, 7, 5, 8, 6 };
 		fillBoard(cells);
-		verify(conn1, times(5)).sendEvent(eq(EventType.SET_TURN), argThat(is(px)));
-		verify(conn2, times(4)).sendEvent(eq(EventType.SET_TURN), argThat(is(po)));
+		verify(conn1, times(5)).sendEvent(eq(EventType.SET_TURN), argThat(is(playerX)));
+		verify(conn2, times(4)).sendEvent(eq(EventType.SET_TURN), argThat(is(playerO)));
 		verify(conn1, times(1)).sendEvent(eq(EventType.GAME_OVER), argThat(nullValue()));
 		verify(conn2, times(1)).sendEvent(eq(EventType.GAME_OVER), argThat(nullValue()));
 	}

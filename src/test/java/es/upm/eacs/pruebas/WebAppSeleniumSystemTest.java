@@ -97,7 +97,7 @@ public class WebAppSeleniumSystemTest {
 	}
 
 	@Test
-	public void GivenTwoPlayers_WhenFillingTheCells_ThenTheyDraw() {
+	public void GivenTwoPlayers_WhenFillingTheCells_ThenPlayersDraw() {
 
 		// When
 		String[] cells = {"4","0","2","6","3","5","7","1","8"};
