@@ -41,7 +41,6 @@ public class WebAppSeleniumSystemTest {
 		nickName1 = "PlayerX";
 		nickName2 = "PlayerO";
 		setUsers("PlayerX", "PlayerO");
-		
 	}
 
 	@After
@@ -69,14 +68,19 @@ public class WebAppSeleniumSystemTest {
 				driver2.findElement(By.id("cell-" + cells[i])).click();
 			}
 		}
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 
 	@Test
-	public void GivenTwoPlayers_WhenFillingTheCells_ThenFirstOneWins() {
+	public void GivenTwoPlayers_WhenFillingTheCells_ThenFirstPlayerWins() {
 
 		// When
-		String[] cells = {"4","0","2","6","3","7","5"};
+		String[] cells = {"4","0","2","6","3","7","8","1","5"};
 		fillBoard(cells);
 
 		// Then
@@ -85,7 +89,7 @@ public class WebAppSeleniumSystemTest {
 	}
 
 	@Test
-	public void GivenTwoPlayers_WhenFillingTheCells_ThenSecondOneWins() {
+	public void GivenTwoPlayers_WhenFillingTheCells_ThenSecondPlayerWins() {
 
 		// When
 		String[] cells = {"0","4","6","3","7","5"};

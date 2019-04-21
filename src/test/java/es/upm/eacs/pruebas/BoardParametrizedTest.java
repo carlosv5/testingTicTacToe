@@ -25,11 +25,11 @@ public class BoardParametrizedTest {
 		WINX, WINO, DRAW
 	};
 
-	@Parameters(name = "{index}: TypeTest: {9} - CellsX[{0},{1},{2},{6},{8}] - CellsO[{3},{4},{5},{7}] - Player {3} - Result:{4}")
+	@Parameters(name = "{index}: TypeTest: {9} - CellsX[{0},{2},{4},{6},{8}] - CellsO[{1},{3},{5},{7}]")
 	public static Collection<Object[]> data() {
-		Object[][] values = {   { 0, 3, 1, 4, 2, 6, 9, 9, 9, Type.WINX, "X", "O" }, 
-								{ 0, 1, 4, 2, 8, 5, 9, 9, 9, Type.WINX, "X", "O" },
-								{ 2, 3, 5, 4, 8, 7, 9, 9, 9, Type.WINX, "X", "O" }, 
+		Object[][] values = {   { 0, 3, 1, 4, 2, 9, 9, 9, 9, Type.WINX, "X", "O" }, 
+								{ 0, 1, 4, 2, 8, 9, 9, 9, 9, Type.WINX, "X", "O" },
+								{ 2, 3, 5, 4, 8, 9, 9, 9, 9, Type.WINX, "X", "O" }, 
 								{ 1, 0, 4, 3, 5, 6, 9, 9, 9, Type.WINO, "X", "O" },
 								{ 0, 3, 1, 4, 8, 5, 9, 9, 9, Type.WINO, "X", "O" }, 
 								{ 4, 0, 6, 1, 5, 2, 9, 9, 9, Type.WINO, "X", "O" },
@@ -88,7 +88,7 @@ public class BoardParametrizedTest {
 	}
 
 	@Test
-	public void GivenBoardAndPositions_WhenAsummingWINXTypeAndFillingThisCells_ThenplayerXWins() {
+	public void GivenBoardAndPositions_WhenAsummingWINXTypeAndFillingThisCells_ThenFirstPlayerWins() {
 		// When
 		Assume.assumeTrue(type == Type.WINX);
 		int[] result = board.getCellsIfWinner(playerX);
@@ -99,7 +99,7 @@ public class BoardParametrizedTest {
 	}
 
 	@Test
-	public void GivenBoardAndPositions_WhenAsummingWINOTypeAndFillingThisCells_ThenplayerOWins() {
+	public void GivenBoardAndPositions_WhenAsummingWINOTypeAndFillingThisCells_ThenSecondPlayerWins() {
 		// When
 		Assume.assumeTrue(type == Type.WINO);
 		int[] result = board.getCellsIfWinner(playerO);

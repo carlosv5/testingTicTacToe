@@ -69,7 +69,7 @@ public class TicTacToeGameTest {
 	}
 
 	@Test
-	public void GivenTwoPlayers_WhenFillingTheCells_ThenFirstOneWins() {
+	public void GivenTwoPlayers_WhenFillingTheCells_ThenFirstPlayerWins() {
 		int[] cells = { 0, 1, 3, 4, 6 };
 		fillBoard(cells);
 		verify(conn1, times(3)).sendEvent(eq(EventType.SET_TURN), argThat(is(playerX)));
@@ -80,7 +80,7 @@ public class TicTacToeGameTest {
 	}
 
 	@Test
-	public void GivenTwoPlayers_WhenFillingTheCells_ThenSecondOneWins() {
+	public void GivenTwoPlayers_WhenFillingTheCells_ThenSecondPlayerWins() {
 		int[] cells = { 4, 0, 1, 3, 2, 6 };
 		fillBoard(cells);
 		verify(conn1, times(3)).sendEvent(eq(EventType.SET_TURN), argThat(is(playerX)));
