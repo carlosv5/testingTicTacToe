@@ -2,27 +2,42 @@ package es.upm.eacs.pruebas;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStreamReader;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.testcontainers.containers.BrowserWebDriverContainer;
+import org.testcontainers.containers.BrowserWebDriverContainer.VncRecordingMode;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class WebAppSeleniumSystemTest {
 
-	protected WebDriver driver1, driver2;
+	protected RemoteWebDriver driver1, driver2;
 	private String baseUrl;
 	private String nickName1;
 	private String nickName2;
+	@Rule
+	public BrowserWebDriverContainer chrome1 = new BrowserWebDriverContainer()
+			 .withDesiredCapabilities(DesiredCapabilities.chrome())
+			 .withRecordingMode(VncRecordingMode.RECORD_ALL, new File("./target/"));
+	@Rule
+	public BrowserWebDriverContainer chrome2 = new BrowserWebDriverContainer()
+			 .withDesiredCapabilities(DesiredCapabilities.chrome());
 
 	@BeforeClass
 	public static void setupClass() {
-		WebDriverManager.chromedriver().setup();
 		WebApp.start();
 	}
 
@@ -33,11 +48,16 @@ public class WebAppSeleniumSystemTest {
 
 	@Before
 	public void setupTest() {
-		driver1 = new ChromeDriver();
-		driver2 = new ChromeDriver();
+
+        String hostIpAddress = chrome1.get
+        hostIpAddress = hostIpAddress.substring(0, hostIpAddress.length() - 1) + "1";
+        System.out.println(hostIpAddress);
+		driver1 = chrome1.getWebDriver();
+		driver2 = chrome2.getWebDriver();
 		baseUrl = "http://localhost:8080/";
-		driver1.get(baseUrl);
-		driver2.get(baseUrl);
+        
+		driver1.get("http://"+ hostIpAddress + ":8080/");
+		driver2.get("http://"+ hostIpAddress + ":8080/");
 		nickName1 = "PlayerX";
 		nickName2 = "PlayerO";
 		setUsers("PlayerX", "PlayerO");
