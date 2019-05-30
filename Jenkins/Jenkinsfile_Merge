@@ -1,8 +1,8 @@
 node {
-stage ('Checkout') {
+ stage ('Checkout') {
     IP = sh(returnStdout: true, script: "docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' codeurjc-forge-gerrit").trim()
     git url: "http://" + IP + ":8080/TicTacToe"
-}
+ }
  stage ('Unit and System test') {
      docker.image('maven:3-jdk-8-alpine').inside('-v $HOME/.m2:/root/.m2 '
      +'-v /var/run/docker.sock:/var/run/docker.sock') {
@@ -15,6 +15,14 @@ stage ('Checkout') {
      docker.image('maven:3-jdk-8-alpine').inside('-v $HOME/.m2:/root/.m2 ' + '--network=ci-network --link codeurjc-forge-sonarqube:sonarqube '
      +'-v /var/run/docker.sock:/var/run/docker.sock') {
         sh 'mvn sonar:sonar -Dsonar.jdbc.url=jdbc:h2:tcp://sonarqube:9092/sonar -Dsonar.host.url=http://sonarqube:9000'
+     }
  }
+ stage ('Create Docker image') {
+     docker build --build-arg GIT_COMMIT=$(git log -1 --format=%h) -t testingupmforge/TicTacToe:latest .
+ }
+ stage ('Push Docker image to DockerHub') {
+     sh 'docker tag testingupmforge/TicTacToe:latest testingupmforge/TicTacToe:dev'
+     sh 'docker login -u="testingupmforge" -p="carl*sys3rgi*123"'
+     sh 'docker push testingupmforge/TicTacToe:dev'
  }
 }
