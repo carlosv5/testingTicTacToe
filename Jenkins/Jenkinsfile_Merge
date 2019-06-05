@@ -1,5 +1,5 @@
 
-de {
+node {
 stage ('Checkout') {
     IP = sh(returnStdout: true, script: "docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' codeurjc-forge-gerrit").trim()
     checkout([$class: 'GitSCM', branches: [[name:'FETCH_HEAD']],
