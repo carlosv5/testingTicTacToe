@@ -2,17 +2,16 @@
 node {
 stage ('Checkout') {
     IP = sh(returnStdout: true, script: "docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' codeurjc-forge-gerrit").trim()
-    checkout([$class: 'GitSCM', branches: [[name:'FETCH_HEAD']],
-     userRemoteConfigs: [[refspec: env.GERRIT_REFSPEC,  url: 'http://' + IP + ':8080/TicTacToe']]])
+    git url: "http://" + IP + ":8080/TicTacToe"
 }
 
- stage ('Unit test') {
+stage ('Unit and System test') {
      docker.image('maven:3-jdk-8-alpine').inside('-v $HOME/.m2:/root/.m2 '
      +'-v /var/run/docker.sock:/var/run/docker.sock') {
-        sh 'rm **/target/*.flv || true'
-        sh 'mvn package -Dmaven.test.failure.ignore=true -Dtest=BoardParametrizedTest,TicTacToeGameTest test'     }
-        step([$class: 'JUnitResultArchiver', testResults: '**/target/surefire-reports/TEST-*.xml'])
-//        archiveArtifacts artifacts: 'target/*.flv'
+        sh 'rm target/*.flv || true'
+        sh 'mvn package -Dmaven.test.failure.ignore=true -Dtest=BoardParametrizedTest,TicTacToeGameTest,WebAppSeleniumSystemTest test'     }
+     step([$class: 'JUnitResultArchiver', testResults: '**/target/surefire-reports/TEST-*.xml'])
+        archiveArtifacts artifacts: 'target/*.flv'
  }
 
 stage ('Sonar') {
@@ -22,8 +21,10 @@ stage ('Sonar') {
      }
  }
  stage ('Create Docker image') {
-     sh 'docker build --build-arg GIT_COMMIT=$(git log -1 --format=%h) -t testingupmforge/tictactoe:latest .'
+     sh 'cp Jenkins/Dockerfile target/'
+     sh 'docker build --build-arg GIT_COMMIT=$(git log -1 --format=%h) -t testingupmforge/tictactoe:latest target/.'
  }
+ 
  stage ('Push Docker image to DockerHub') {
      sh 'docker tag testingupmforge/tictactoe:latest testingupmforge/tictactoe:dev'
      sh 'docker login -u="testingupmforge" -p="carl*sys3rgi*123"'
