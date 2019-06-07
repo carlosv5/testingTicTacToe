@@ -1,0 +1,6 @@
+FROM openjdk:11-jre-slim
+ARG GIT_COMMIT=unknown
+LABEL git-commit=$GIT_COMMIT
+ADD ./carlos.vegagarci-sergio.sanchez.ruiz-0.0.1-SNAPSHOT.jar /usr/local/lib/TicTacToe.jar
+EXPOSE 8080
+ENTRYPOINT ["java","-jar","/usr/local/lib/TicTacToe.jar"]
