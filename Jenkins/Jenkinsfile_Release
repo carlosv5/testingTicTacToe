@@ -6,6 +6,7 @@ stage ('Checkout') {
 
 stage ('Remove snapshot tag') {
      docker.image('maven:3-jdk-8-alpine').inside('-v $HOME/.m2:/root/.m2 ') {
+        VERSION = sh(returnStdout: true, script: "grep version pom.xml | grep SNAP | cut -c11-15").trim()
         sh 'sed -i "s/-SNAPSHOT//" pom.xml'
         }
  }
@@ -17,6 +18,14 @@ stage ('Unit and System test') {
         sh 'mvn package -Dmaven.test.failure.ignore=true -Dtest=BoardParametrizedTest,TicTacToeGameTest,WebAppSeleniumSystemTest test' }
      step([$class: 'JUnitResultArchiver', testResults: '**/target/surefire-reports/TEST-*.xml'])
         archiveArtifacts artifacts: 'target/*.flv'
+ }
+
+ stage ('Create and push Docker image') {
+    sh 'cp Jenkins/Dockerfile_Nightly target/Dockerfile'
+    sh 'docker build -t testingupmforge/tictactoe:latest ./target/.'
+    sh 'docker tag testingupmforge/tictactoe:latest testingupmforge/tictactoe:' + VERSION
+    sh 'docker login -u="testingupmforge" -p="carl*sys3rgi*123"'
+    sh'docker push testingupmforge/tictactoe:' +VERSION
  }
  
 
