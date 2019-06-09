@@ -7,6 +7,8 @@ stage ('Checkout') {
 stage ('Remove snapshot tag') {
      docker.image('maven:3-jdk-8-alpine').inside('-v $HOME/.m2:/root/.m2 ') {
         VERSION = sh(returnStdout: true, script: "grep version pom.xml | grep SNAP | cut -c11-15").trim()
+        VERSIONSNAP = sh(returnStdout: true, script: "grep version pom.xml | grep SNAP | cut -c11-24").trim()
+        sh 'cp pom.xml pom.xml_bk'
         sh 'sed -i "s/-SNAPSHOT//" pom.xml'
         }
  }
@@ -26,6 +28,21 @@ stage ('Unit and System test') {
     sh 'docker tag testingupmforge/tictactoe:latest testingupmforge/tictactoe:' + VERSION
     sh 'docker login -u="testingupmforge" -p="carl*sys3rgi*123"'
     sh'docker push testingupmforge/tictactoe:' +VERSION
+ }
+
+ stage ('Push latest') {
+    sh'docker push testingupmforge/tictactoe:latest'
+ }
+ 
+ stage ('Gerrit tag') {
+ }
+ 
+stage ('Update POM with parameter') {
+     docker.image('maven:3-jdk-8-alpine').inside('-v $HOME/.m2:/root/.m2 ') {
+        sh 'sed -i "s/'+VERSIONSNAP+'/'+version+'-SNAPSHOT/" pom.xml_bk'
+        sh 'less pom.xml_bk | grep SNAP'
+        sh 'mv pom.xml_bk pom.xml'
+        }
  }
  
 
