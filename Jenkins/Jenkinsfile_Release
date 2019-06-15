@@ -1,6 +1,6 @@
 node {
     stage ('Checkout') {
-git url:'ssh://jenkins@codeurjc-forge-gerrit:29418/TicTacToe'
+        git url:'ssh://jenkins@codeurjc-forge-gerrit:29418/TicTacToe'
     }
 
     stage ('Remove snapshot tag') {
