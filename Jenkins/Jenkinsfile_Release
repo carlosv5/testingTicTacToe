@@ -34,6 +34,8 @@ stage ('Unit and System test') {
  }
  
  stage ('Gerrit tag') {
+    sh 'git tag -a "'+version+'" -m "Version '+version+'"'
+    sh 'git push ssh://jenkins@codeurjc-forge-gerrit:29418/TicTacToe --tags'
  }
  
 stage ('Update POM with parameter') {
