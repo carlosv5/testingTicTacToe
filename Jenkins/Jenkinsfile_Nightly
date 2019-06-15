@@ -1,33 +1,33 @@
 node {
-stage ('Checkout') {
-git url:'ssh://jenkins@codeurjc-forge-gerrit:29418/TicTacToe'
-}
+    stage ('Checkout') {
+        git url:'ssh://jenkins@codeurjc-forge-gerrit:29418/TicTacToe'
+    }
 
-stage ('Unit and System test') {
-     docker.image('maven:3-jdk-8-alpine').inside('-v $HOME/.m2:/root/.m2 '
-     +'-v /var/run/docker.sock:/var/run/docker.sock') {
-        sh 'rm target/*.flv || true'
-        sh 'mvn package -Dmaven.test.failure.ignore=true -Dtest=BoardParametrizedTest,TicTacToeGameTest,WebAppSeleniumSystemTest test' }
-     step([$class: 'JUnitResultArchiver', testResults: '**/target/surefire-reports/TEST-*.xml'])
+    stage ('Unit and System test') {
+        docker.image('maven:3-jdk-8-alpine').inside('-v $HOME/.m2:/root/.m2 '
+        +'-v /var/run/docker.sock:/var/run/docker.sock') {
+            sh 'rm target/*.flv || true'
+            sh 'mvn package -Dmaven.test.failure.ignore=true -Dtest=BoardParametrizedTest,TicTacToeGameTest,WebAppSeleniumSystemTest test' }
+        step([$class: 'JUnitResultArchiver', testResults: '**/target/surefire-reports/TEST-*.xml'])
         archiveArtifacts artifacts: 'target/*.flv'
- }
+    }
 
- stage ('Create Docker image') {
-     sh 'cp Jenkins/Dockerfile_Nightly target/Dockerfile'
-     sh 'cp Jenkins/build_nightly.sh target/'
-     sh './target/build_nightly.sh'
- }
+    stage ('Create Docker image') {
+        sh 'cp Jenkins/Dockerfile_Nightly target/Dockerfile'
+        sh 'cp Jenkins/build_nightly.sh target/'
+        sh './target/build_nightly.sh'
+    }
 
- stage ('System Test') {
-     docker.image('maven:3-jdk-8-alpine').inside('-v $HOME/.m2:/root/.m2 '
-     +'-v /var/run/docker.sock:/var/run/docker.sock') {
+    stage ('System Test') {
+        docker.image('maven:3-jdk-8-alpine').inside('-v $HOME/.m2:/root/.m2 '
+        +'-v /var/run/docker.sock:/var/run/docker.sock') {
 
-     }
- }
- 
- stage ('Push Docker image to DockerHub') {
-     sh 'docker tag testingupmforge/tictactoe:latest testingupmforge/tictactoe:nightly'
-     sh 'docker push testingupmforge/tictactoe:nightly'
- }
+        }
+    }
+    
+    stage ('Push Docker image to DockerHub') {
+        sh 'docker tag testingupmforge/tictactoe:latest testingupmforge/tictactoe:nightly'
+        sh 'docker push testingupmforge/tictactoe:nightly'
+    }
 }
 
