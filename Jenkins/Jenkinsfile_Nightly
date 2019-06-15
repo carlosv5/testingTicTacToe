@@ -18,13 +18,14 @@ node {
         sh './target/build_nightly.sh'
     }
 
-    stage ('System Test') {
-        docker.image('maven:3-jdk-8-alpine').inside('-v $HOME/.m2:/root/.m2 '
-        +'-v /var/run/docker.sock:/var/run/docker.sock') {
+ stage ('System Test') {
+     docker.image('testingupmforge/tictactoe:latest').inside('-v $HOME/.m2:/root/.m2 '
+     +'-v /var/run/docker.sock:/var/run/docker.sock --entrypoint=""') {
+        sh 'rm target/*.jar'
+        sh 'cp /usr/local/lib/TicTacToe.jar target/'
+        sh 'mvn -Dmaven.test.failure.ignore=true -Dtest=WebAppSeleniumSystemTest test' }
+     }    
 
-        }
-    }
-    
     stage ('Push Docker image to DockerHub') {
         sh 'docker tag testingupmforge/tictactoe:latest testingupmforge/tictactoe:nightly'
         sh 'docker push testingupmforge/tictactoe:nightly'
