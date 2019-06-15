@@ -1,8 +1,6 @@
 node {
 stage ('Checkout') {
-    IP = sh(returnStdout: true, script: "docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' codeurjc-forge-gerrit").trim()
-    checkout([$class: 'GitSCM', branches: [[name:'FETCH_HEAD']],
-     userRemoteConfigs: [[refspec: env.GERRIT_REFSPEC,  url: 'http://' + IP + ':8080/TicTacToe']]])
+checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: '$GERRIT_REFSPEC']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'jenkins-master', refspec: '+refs/changes/*:refs/changes/*', url: 'ssh://jenkins@codeurjc-forge-gerrit:29418/TicTacToe']]]
 }
 
  stage ('Unit test') {
