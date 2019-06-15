@@ -5,8 +5,8 @@ git url:'ssh://jenkins@codeurjc-forge-gerrit:29418/TicTacToe'
 
 stage ('Remove snapshot tag') {
      docker.image('maven:3-jdk-8-alpine').inside('-v $HOME/.m2:/root/.m2 ') {
-        VERSION = sh(returnStdout: true, script: "grep version pom.xml | grep SNAP | cut -c11-15").trim()
-        VERSIONSNAP = sh(returnStdout: true, script: "grep version pom.xml | grep SNAP | cut -c11-24").trim()
+        VERSION = sh(returnStdout: true, script: "grep SNAP pom.xml | awk -v FS='(<version>|-SNAPSHOT</version>)' '{print \$2}'").trim()
+        VERSIONSNAP = sh(returnStdout: true, script: "grep SNAP pom.xml | awk -v FS='(<version>|</version>)' '{print \$2}'").trim()
         sh 'cp pom.xml pom.xml_bk'
         sh 'sed -i "s/-SNAPSHOT//" pom.xml'
         }
