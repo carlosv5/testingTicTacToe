@@ -34,7 +34,7 @@ node {
     }
     
     stage ('Gerrit tag') {
-        sh 'git tag -a "'+version+'" -m "Version '+version+'"'
+        sh 'git tag -a "'+VERSION+'" -m "Version '+VERSION+'"'
         sh 'git push ssh://jenkins@codeurjc-forge-gerrit:29418/TicTacToe --tags'
     }
     
